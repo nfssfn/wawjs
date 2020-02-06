@@ -1,5 +1,5 @@
 {
-  "name": "ulohy",
+  "name": "uloha01",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,12 +7,11 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha --color test/creating-objects.spec.js",
-    "bonus": "mocha --color test/introspect.spec.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mocha": "^6.2.1"
+    "await-of": "^1.2.0"
   }
 }

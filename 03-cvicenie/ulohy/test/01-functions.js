@@ -3,25 +3,19 @@ const assert = require("assert");
 
 describe("03-functions", function() {
   it("1. define function using FunctionDeclaration", function() {
-    // TODO:
-    //
-    //
-    //
+    function f(a = '',b = '',c = '') { return a + b + c; }
     assert(typeof f === "function");
     assert(f("a", "b") === "ab");
     assert(f("a", "b", "c") === "abc");
   });
   it("2. define function using FunctionExpression", function() {
-    // TODO:
-    //
-    //
-    //
+    const f = function (a = '',b = '',c = '') { return a + b + c; }
     assert(typeof f === "function");
     assert(f("a", "b") === "ab");
     assert(f("a", "b", "c") === "abc");
   });
   it("3. define function using ArrowFunctionExpression", function() {
-    // TODO:
+    const f = (a = '',b = '',c = '') => { return a + b + c; }
 
     assert(typeof f === "function");
     assert(f("a", "b") === "ab");
@@ -30,7 +24,9 @@ describe("03-functions", function() {
   it("4. define method using function expression", function() {
     var o = {
       c: "c",
-      //TODO: m:.....
+      m: function (a,b) {
+        return a + b + o.c;
+      }
     };
     assert(typeof o.m === "function");
     assert(o.m("a", "b") === "abc")
@@ -49,7 +45,7 @@ describe("03-functions", function() {
     }
     assert(
       // TODO: fix the method call
-      soundMachine.play(dog) === "haf"
+      soundMachine.play.apply(dog) === "haf"
     );
     assert(
       // TODO: fix the method call
@@ -63,25 +59,25 @@ describe("03-functions", function() {
     let soundMachine = {
       play: function(repeat) {
         // TODO: fix implementation
-        return this.sound;
+        return (new Array(repeat)).fill(this.sound).join('');
       }
     }
     assert.strictEqual(
       // TODO: fix the method call
-      soundMachine.play(dog, 3), "hafhafhaf"
+      soundMachine.play.call(dog, 3), "hafhafhaf"
     );
   });
   it("7. scope of var", function() {
     for (var i = 0; i < 10; i++) {
 
     };
-    assert(typeof i === "TODO:");
+    assert(typeof i === "number");
   });
   it("8. scope of var", function() {
     for (let i = 0; i < 10; i++) {
 
     };
-    assert(typeof i === "TODO:");
+    assert(typeof i === "undefined");
   });
   it("9. scopes 1", function() {
     let x = 10;
@@ -90,7 +86,7 @@ describe("03-functions", function() {
       let r = x + y;
       return r;
     }
-    assert(f(20) === "TODO:");
+    assert(f(20) === 30);
   });
   it("10. scopes 2", function() {
     let x = 10;
@@ -103,11 +99,14 @@ describe("03-functions", function() {
     //assert(f(100) === 20);
     //assert(f(100) === 200);
 
-    //assert(Object.is(f(),NaN));
+    assert(Object.is(f(),NaN));
     //assert(Object.is(f(),20));
   });
   it("11. Implementujte funkciu spravajucu sa podla poctu parametrov", function() {
     function calc() {
+      if (arguments.length % 2 == 0)
+        return 'ok';
+      return 'err';
       //TODO:
       //ak je pocet parny vrati "ok"
       //ak je pocet neparny vrati "err" 
@@ -118,9 +117,12 @@ describe("03-functions", function() {
   });
   it("12. Implementujte funkciu z troma alebo siestimi parametrami", function() {
     const calc = (...numbers) => {
-      // ak pride nespravny pocet
-      // tak error
-      // inak Max z parametrov
+      if(numbers.length > 6)
+        throw TypeError("> 6");
+      throw TypeError('< 6 && !3');
+      if (numbers.length == 3 || numbers.length == 6) 
+        return Math.max(...numbers);
+
     };
     assert(calc(1, 2, 3) === 3);
     assert(calc(1, 2, 3, 5, 2, 3) === 5);
@@ -132,18 +134,18 @@ describe("03-functions", function() {
     }, TypeError)
     assert.throws(() => {
       calc(1)
-    }, TypeError)
+    }, TypeError, '< 6 && !3')
     assert.throws(() => {
       calc()
-    }, TypeError)
+    }, TypeError, '> 6')
   });
   it("13. Implementujte funkciu z troma alebo siestimi parametrami", function() {
     // ak by mala mat takuto syntax
     // teda formalne 3 paramere a 3 optional
     const calc = (a, b, c, ...others) => {
-      // ak pride nespravny pocet
-      // tak error
-      // inak Max z parametrov
+      if ((others.length == 0 && c !== undefined) || others.length == 3)
+        return Math.max(a,b,c,...others);
+      throw TypeError();
     };
     // asserty su zhodne z predoslym
     assert(calc(1, 2, 3) === 3);
@@ -171,16 +173,20 @@ describe("03-functions", function() {
     // otazka zo skusky minuly rok
 
     //assert(printValue(o)===1);
-    //assert(printValue.call(o)===1);
-    //assert(printValue.apply(o)===1);
+    assert(printValue.call(o)===1);
+    assert(printValue.apply(o)===1);
     //assert(printValue.call(null, [o])===1);
     //assert(printValue.bind(o)===1);
-    //assert(printValue.bind(o)()===1);
+    assert(printValue.bind(o)()===1);
   });
   it("15. prefix a sufix", function() {
 
     function Formatter(prefix, sufix) {
-      // TODO: implement
+      this.prefix = prefix;
+      this.sufix = sufix;
+    }
+    Formatter.prototype.format = function (text) {
+      return this.prefix + text + this.sufix;
     }
     let f1 = new Formatter("'", "'");
     assert(f1.format("text") === "'text'");
@@ -193,9 +199,10 @@ describe("03-functions", function() {
   });
   it("16. prefix a sufix (using closure)", function() {
 
-    function formater( /*TODO*/ ) {
-      return function( /*TODO*/ ) {
-        /*TODO*/
+    function formater( pref, suf ) {
+      return function( text ) {
+        // console.log(pref + text + suf)
+        return pref + text + suf;
       }
     }
     let format1 = formater("'", "'");
@@ -207,8 +214,13 @@ describe("03-functions", function() {
   });
   it("17. prefix a sufix (using closure)", function() {
 
-    function formater() {
-      /*TODO*/
+    function formater(prefix, suff) {
+      function fnd(text) {
+        return fnd.prefix + text + fnd.sufix;
+      };
+      fnd.sufix = suff;
+      fnd.prefix = prefix;
+      return fnd;
     }
     let format1 = formater("'", "'");
     assert(format1("text") === "'text'");

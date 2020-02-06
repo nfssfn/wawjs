@@ -1,4 +1,4 @@
-const writeTempFile = require("../src/writeTempFile3.js");
+const writeTempFile = require("../src/writeTempFile1.js");
 const assert = require("assert");
 
 const os = require("os");

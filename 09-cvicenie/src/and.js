@@ -1,10 +1,9 @@
-const and = (f1, ...fns) => x => !!fns.reduce(
-  (r, fn) => r = r && fn(x),
-  f1(x)
-);
+// const and = (f1, ...fns) => x => !!fns.reduce(
+//   (r, fn) => r = r && fn(x),
+//   f1(x)
+// );
 
-// TODO: reimplement using recursion
-// and quick exit, avoid useles loop of whole array
+const and = (...fns) => x => fns.every(fn => Boolean(fn(x)));
 
 module.exports = and;
 
